@@ -9,19 +9,21 @@
 # File name: diy-part2.sh
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
-# 修改内核5.14
-sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.14/g' target/linux/x86/Makefile
-sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=5.14/g' target/linux/x86/Makefile
-#
-# Disable DHCP server
-sed -i 's/start/ignore/' package/network/services/dnsmasq/files/dhcp.conf
-sed -i 's/100/1/' package/network/services/dnsmasq/files/dhcp.conf
-sed -i '28d' package/network/services/dnsmasq/files/dhcp.conf
-sed -i '28d' package/network/services/dnsmasq/files/dhcp.conf
-#
-# Modify default IP
-sed -i 's/192.168.1.1/10.255.255.99/g' package/base-files/files/bin/config_generate
-# Change SSH Prot
-sed -i 's/22/2333/g' package/network/services/dropbear/files/dropbear.config
-# Chenge password
-sed -i '1c root:$1$McPtUJaL$M47t/nUbjYrWraS5NgvOx0:18552:0:99999:7:::' package/base-files/files/etc/shadow
+# 管理地址
+sed -i 's/192.168.1.1/192.168.99.3/g' package/base-files/files/bin/config_generate
+
+# 默认主题
+sed -i 's/luci-theme-bootstrap/luci-theme-argonne/g' feeds/luci/collections/luci/Makefile
+
+# 修改NAS为网络存储
+sed -i 's/"NAS"/"网络存储"/g' `grep "NAS" -rl ./`
+
+# 修改固件默认时区
+sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
+
+# 修改固件默认名称
+sed -i 's/ImmortalWrt/HIWIFI/g' package/base-files/files/bin/config_generate
+
+
+# 其它
+# sed -i '21d' package/lean/default-settings/files/zzz-default-settings #禁止网络共享分类到NAS
